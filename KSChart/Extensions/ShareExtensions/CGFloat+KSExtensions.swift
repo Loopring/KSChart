@@ -20,6 +20,7 @@ extension CGFloat {
     public func ks_toString(_ minimum: Int = 2, maximum: Int = 6, minimumInteger: Int = 1) -> String {
         let valueDecimalNumber = NSDecimalNumber(value: Double(self) as Double)
         let twoDecimalPlacesFormatter = NumberFormatter()
+        twoDecimalPlacesFormatter.locale = Locale.current
         twoDecimalPlacesFormatter.maximumFractionDigits = maximum
         twoDecimalPlacesFormatter.minimumFractionDigits = minimum
         twoDecimalPlacesFormatter.minimumIntegerDigits = minimumInteger

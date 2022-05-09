@@ -81,14 +81,26 @@ extension String {
     ///成交量
     public func ks_volume() -> String {
         let vol = Double(self) ?? 0
+        var str: String
+        var unit: String = ""
+        let precision = 2
         if vol >= 1000000.0 {
-            return String.init(format: "%.2fM", vol/1000000.0)
+            str = String(format: "%.2f", vol/1000000.0)
+            unit = "M"
+        } else if vol >= 1000.0 {
+            str = String(format: "%.2f", vol/1000.0)
+            unit = "K"
+        } else {
+            str = self
         }
-        else if vol >= 1000.0 {
-            return String.init(format: "%.2fK", vol/1000.0)
-        }
-        else {
-            return self
-        }
+        let decimal = Decimal(string: str) ?? Decimal(0)
+        let formatter = NumberFormatter()
+        formatter.maximumFractionDigits = precision
+        formatter.minimumFractionDigits = precision
+        formatter.roundingMode = .floor
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        let res = formatter.string(from: NSDecimalNumber(decimal: decimal))!
+        return res + unit
     }
 }

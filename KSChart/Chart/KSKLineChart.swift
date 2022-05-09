@@ -428,8 +428,9 @@ open class KSKLineChartView: UIView {
             yAxisStartX = section!.frame.maxX - self.pref.yAxisLabelWidth
         case .none:break
         }
+        
         self.topLayer.updateYAxisLabel(rect: CGRect(x: yAxisStartX, y: vy - self.labelHeight / 2, width: self.pref.yAxisLabelWidth, height: self.labelHeight),
-        text: String(format: format, yVal))
+                                       text: String(format: format, yVal).numberFormatted(precision: yaxis.decimal))
         
         let time                       = self.delegate?.ksLineChart?(self, xAxisTextForIndex: currentIndex) ?? ""
         let size                       = time.ks_sizeWithConstrained(self.style.labelFont)
@@ -483,6 +484,17 @@ open class KSKLineChartView: UIView {
             self.showSelection = false
             self.delegate?.ksLineChart?(self, displayCross: false)
         }
+    }
+}
+
+extension String {
+    func numberFormatted(precision: Int) -> String {
+        let ft = NumberFormatter()
+        ft.numberStyle = .decimal
+        ft.locale = Locale.current
+        ft.maximumFractionDigits = precision
+        ft.minimumFractionDigits = precision
+        return ft.string(from: NSDecimalNumber(string: self)) ?? ""
     }
 }
 
@@ -750,7 +762,7 @@ extension KSKLineChartView {
     
     /// 初始化分区上各个线的Y轴
     ///
-    /// - Parameter section: 
+    /// - Parameter section:
     func initYAxis(_ section: KSSection) {
         if section.series.count > 0 {
             //建立分区每条线的坐标系
